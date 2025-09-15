@@ -22,7 +22,7 @@ class TestRoutes(TestCase):
 
     def test_pages_availability(self):
 
-        urls = (    
+        urls = (
             ('news:home', None),
             ('news:detail', (self.news.pk,)),
             ('users:login', None),

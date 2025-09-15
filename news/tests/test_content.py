@@ -6,6 +6,7 @@ from django.urls import reverse
 from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+
 from news.forms import CommentForm
 
 User = get_user_model()
@@ -63,6 +64,7 @@ class TestDetailPage(TestCase):
         all_comments = news.comment_set.all()
         all_timestamps = [comment.created for comment in all_comments]
         sorted_timestamps = sorted(all_timestamps)
+
         self.assertEqual(all_timestamps, sorted_timestamps)
 
     def test_anonymous_client_has_no_form(self):
@@ -74,3 +76,4 @@ class TestDetailPage(TestCase):
         response = self.client.get(self.detail_url)
         self.assertIn('form', response.context)
         self.assertIsInstance(response.context['form'], CommentForm)
+        self.assertEqual(all_timestamps, sorted_timestamps)
