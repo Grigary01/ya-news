@@ -34,14 +34,12 @@ def test_comment_order(client, comment_data, news, author_client, detail_url):
 
 
 @pytest.mark.django_db
-def test_anonymous_client_has_no_form(client, news):
-    url = reverse('news:detail', args=(news.pk,))
-    response = client.get(url)
+def test_anonymous_client_has_no_form(client, news, detail_url):
+    response = client.get(detail_url)
     assert 'form' not in response.context
 
 
-def test_authorized_client_has_form(author_client, news):
-    url = reverse('news:detail', args=(news.pk,))
-    response = author_client.get(url)
+def test_authorized_client_has_form(author_client, news, detail_url):
+    response = author_client.get(detail_url)
     assert 'form' in response.context
     assert isinstance(response.context['form'], CommentForm)
