@@ -6,22 +6,15 @@ from news.forms import CommentForm
 
 
 @pytest.mark.django_db
-def test_news_count(client):
+def test_news_count(client, news_data):
     url = reverse('news:home')
     response = client.get(url)
-
-    # Проверяем статус ответа
-    assert response.status_code == 200
-
-    # Безопасное получение object_list
-    object_list = response.context.get('object_list')
-    assert object_list is not None, 'object_list is None'
-
-    news_count = len(object_list)  # Используем len вместо count() для QuerySet
-    assert news_count == settings.NEWS_COUNT_ON_HOME_PAGE
+    object_list = response.context['object_list']
+    new_count = object_list.count()
+    assert new_count == settings.NEWS_COUNT_ON_HOME_PAGE
 
 
-def test_news_order(client):
+def test_news_order(client, news_data):
     url = reverse('news:home')
     response = client.get(url)
     object_list = response.context['object_list']
@@ -30,12 +23,11 @@ def test_news_order(client):
     assert all_dates == sorted_dates
 
 
-def test_comment_order(client):
-    url = reverse('news:detail')
-    response = client.get(url)
+def test_comment_order(client, comment_data, news, author_client, detail_url):
+    response = client.get(detail_url)
     assert 'news' in response.context
-    news = response.context['news']
-    all_comments = news.comments_set.all()
+    news_from_context = response.context['news']
+    all_comments = news_from_context.comment_set.all()
     all_timestamps = [comment.created for comment in all_comments]
     sorted_timestamps = sorted(all_timestamps)
     assert all_timestamps == sorted_timestamps

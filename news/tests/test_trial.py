@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class TestNews(TestCase):
     TITLE = 'Заголовок новости'
     TEXT = 'Тестовый текст'
@@ -25,5 +26,4 @@ class TestNews(TestCase):
         self.assertEqual(new_count, 1)
 
     def test_title(self):
-        # Сравним свойство объекта и ожидаемое значение.
         self.assertEqual(self.news.title, self.TITLE)
